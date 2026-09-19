@@ -4,8 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#b8e986">
+<meta name="description" content="LimonMusic — бесплатная музыка без рекламы">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex, nofollow">
 <title>LimonMusic</title>
 <link rel="manifest" href="manifest.json">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍋</text></svg>">
 <style>
 /* ============ ТЕМА ============ */
 :root {
@@ -82,7 +86,7 @@ input { font-family: inherit; }
   width: 32px; height: 32px; border-radius: 50%;
   background: var(--gradient-accent);
   display: grid; place-items: center;
-  font-size: 16px;
+  font-size: 18px;
 }
 .nav-item {
   display: flex; align-items: center; gap: 14px;
@@ -298,6 +302,100 @@ input { font-family: inherit; }
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
+/* ============ SETTINGS ============ */
+.settings-section {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 20px;
+  margin-bottom: 16px;
+}
+.settings-section h3 {
+  font-size: 16px; font-weight: 600; margin-bottom: 4px;
+  display: flex; align-items: center; gap: 8px;
+}
+.settings-section .desc {
+  font-size: 13px; color: var(--text-dim); margin-bottom: 16px;
+}
+.setting-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 0; gap: 12px;
+}
+.setting-row + .setting-row { border-top: 1px solid var(--border); }
+.setting-label { font-size: 14px; font-weight: 500; }
+.setting-hint { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+
+.switch {
+  position: relative; width: 44px; height: 26px; flex-shrink: 0;
+  background: var(--surface-3); border-radius: 999px;
+  cursor: pointer; transition: background 0.2s;
+}
+.switch::after {
+  content: ''; position: absolute; top: 3px; left: 3px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: #fff; transition: transform 0.2s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+.switch.on { background: var(--accent-deep); }
+.switch.on::after { transform: translateX(18px); }
+
+input[type="range"] {
+  -webkit-appearance: none; appearance: none;
+  width: 100%; height: 6px; border-radius: 3px;
+  background: var(--surface-3); outline: none; cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--accent-deep); cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--accent-deep); border: none; cursor: pointer;
+}
+
+.eq-bands {
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  gap: 12px; margin: 20px 0 8px;
+  padding: 16px 12px; background: var(--surface-2);
+  border-radius: var(--radius-sm);
+}
+.eq-band {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+}
+.eq-band input[type="range"] {
+  writing-mode: vertical-lr; direction: rtl;
+  width: 6px; height: 120px; padding: 0;
+  -webkit-appearance: slider-vertical;
+}
+.eq-band .val { font-size: 11px; color: var(--text-dim); font-variant-numeric: tabular-nums; }
+.eq-band .lbl { font-size: 11px; color: var(--text-dim); font-weight: 600; }
+
+.eq-presets { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.eq-preset {
+  padding: 6px 12px; border-radius: 999px;
+  background: var(--surface-2); border: 1px solid var(--border);
+  font-size: 12px; color: var(--text-dim); font-weight: 500;
+  transition: all 0.15s;
+}
+.eq-preset:hover { color: var(--text); }
+.eq-preset.active { background: var(--accent); color: var(--text); border-color: var(--accent); }
+
+.speed-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.speed-chip {
+  padding: 6px 14px; border-radius: 999px;
+  background: var(--surface-2); border: 1px solid var(--border);
+  font-size: 13px; font-weight: 600; color: var(--text-dim);
+}
+.speed-chip.active { background: var(--accent); color: var(--text); border-color: var(--accent); }
+
+.text-input {
+  width: 100%; padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border); background: var(--surface-2);
+  color: var(--text); font-size: 14px; outline: none;
+}
+.text-input:focus { border-color: var(--accent-deep); }
+
 /* ============ MISC ============ */
 .spinner {
   width: 32px; height: 32px; border: 3px solid var(--surface-3);
@@ -307,7 +405,6 @@ input { font-family: inherit; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 .hidden { display: none !important; }
-.mobile-only { display: none; }
 
 /* ============ MOBILE ============ */
 @media (max-width: 860px) {
@@ -327,8 +424,6 @@ input { font-family: inherit; }
   .nav-item .ico { width: 22px; height: 22px; }
   .main { grid-row: 1; padding: 16px 16px 24px; }
   .main-header h1 { font-size: 22px; }
-  .mobile-only { display: block; }
-  .desktop-only { display: none !important; }
   .player {
     grid-template-columns: 1fr auto;
     padding: 8px 12px;
@@ -338,7 +433,6 @@ input { font-family: inherit; }
   .p-progress { max-width: none; }
   .p-right { display: none; }
   .p-cover { width: 48px; height: 48px; }
-  .p-controls .p-btn.hide-mobile { display: none; }
 }
 </style>
 </head>
@@ -347,7 +441,7 @@ input { font-family: inherit; }
   <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="logo">
-      <div class="logo-icon">🎵</div>
+      <div class="logo-icon">🍋</div>
       <span>LimonMusic</span>
     </div>
     <button class="nav-item active" data-view="search">
@@ -361,6 +455,10 @@ input { font-family: inherit; }
     <button class="nav-item" data-view="liked">
       <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></svg>
       <span>Любимые</span>
+    </button>
+    <button class="nav-item" data-view="settings">
+      <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+      <span>Настройки</span>
     </button>
     <div class="nav-sep"></div>
     <div class="playlists-side">
@@ -390,7 +488,7 @@ input { font-family: inherit; }
   <!-- PLAYER -->
   <div class="player">
     <div class="p-left">
-      <div class="p-cover" id="pCover">🎵</div>
+      <div class="p-cover" id="pCover">🍋</div>
       <div class="p-info">
         <div class="p-title" id="pTitle">Ничего не играет</div>
         <div class="p-artist" id="pArtist">Выберите трек</div>
@@ -445,14 +543,29 @@ input { font-family: inherit; }
 
 <script>
 /* ============================================================
-   LIME MUSIC — версия 1.0
-   Чистый JS, без зависимостей
+   LIMONMUSIC v2.0
+   Домен: https://limonmusic.jo3.org
    ============================================================ */
 
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => document.querySelectorAll(s);
 
-/* ---------- СОСТОЯНИЕ ---------- */
+/* ============ КОНФИГ ============ */
+const CONFIG = {
+  // Источник по умолчанию (Audius — открытая музыка)
+  AUDIUS_HOST: 'https://discoveryprovider.audius.co',
+  APP_NAME: 'LimonMusic',
+  // Свой API (вариант D). Если пользователь ввёл — используется вместо Audius.
+  // Формат ожидаемых эндпоинтов:
+  //   GET  {customApi}/search?q=...   → [{id,title,artist,url,cover,duration}]
+  //   GET  {customApi}/stream/{id}    → аудиопоток
+  CUSTOM_API_FALLBACK: '',
+  // Прокси (если поднят свой server.py с /api/proxy)
+  USE_PROXY: true,
+  PROXY_PATH: '/api/proxy',
+};
+
+/* ============ СОСТОЯНИЕ ============ */
 const state = {
   view: 'search',
   currentPlaylist: null,
@@ -460,23 +573,32 @@ const state = {
   qIndex: -1,
   playing: false,
   shuffle: false,
-  repeat: 'off', // off | all | one
-  localTracks: [], // локальные файлы
-  playlists: [],   // {id, name, tracks:[]}
-  liked: [],       // массив треков
-  settings: { theme: 'light', volume: 1 },
+  repeat: 'off',
+  localTracks: [],
+  playlists: [],
+  liked: [],
+  settings: {
+    theme: 'light',
+    volume: 1,
+    speed: 1,
+    eq: { enabled: false, preset: 'flat', bands: [0,0,0,0,0] },
+    customApi: '',
+    useProxy: true,
+  },
 };
 
-/* ---------- STORAGE ---------- */
-const LS_KEY = 'lime_music_v1';
+/* ============ STORAGE ============ */
+const LS_KEY = 'limon_music_v2';
 function saveState() {
-  const data = {
-    playlists: state.playlists,
-    liked: state.liked,
-    localTracks: state.localTracks.map(t => ({ ...t, blob: undefined, url: undefined, needsReload: !!t.isLocal })),
-    settings: state.settings,
-  };
-  localStorage.setItem(LS_KEY, JSON.stringify(data));
+  try {
+    const data = {
+      playlists: state.playlists,
+      liked: state.liked,
+      localTracks: state.localTracks.map(t => ({ ...t, blob: undefined, url: undefined, needsReload: !!t.isLocal })),
+      settings: state.settings,
+    };
+    localStorage.setItem(LS_KEY, JSON.stringify(data));
+  } catch (e) { console.warn('save error', e); }
 }
 function loadState() {
   try {
@@ -485,19 +607,22 @@ function loadState() {
     const data = JSON.parse(raw);
     state.playlists = data.playlists || [];
     state.liked = data.liked || [];
-    state.settings = { ...state.settings, ...(data.settings || {}) };
+    state.settings = {
+      ...state.settings,
+      ...(data.settings || {}),
+      eq: { ...state.settings.eq, ...((data.settings || {}).eq || {}) },
+    };
     state.localTracks = (data.localTracks || []).filter(t => !t.needsReload);
-    // Восстанавливаем локальные файлы из IndexedDB
     restoreLocalFromIDB();
   } catch (e) { console.warn('load error', e); }
 }
 
-/* ---------- INDEXEDDB (для локальных MP3) ---------- */
+/* ============ INDEXEDDB ============ */
 let idb = null;
 function openIDB() {
   return new Promise((res, rej) => {
     if (idb) return res(idb);
-    const req = indexedDB.open('lime_music_files', 1);
+    const req = indexedDB.open('limon_music_files', 1);
     req.onupgradeneeded = () => {
       const db = req.result;
       if (!db.objectStoreNames.contains('files')) db.createObjectStore('files', { keyPath: 'id' });
@@ -523,14 +648,6 @@ async function idbGetAll() {
     req.onerror = () => rej(req.error);
   });
 }
-async function idbDelete(id) {
-  const db = await openIDB();
-  return new Promise((res, rej) => {
-    const tx = db.transaction('files', 'readwrite');
-    tx.objectStore('files').delete(id);
-    tx.oncomplete = res; tx.onerror = () => rej(tx.error);
-  });
-}
 async function restoreLocalFromIDB() {
   try {
     const files = await idbGetAll();
@@ -543,32 +660,80 @@ async function restoreLocalFromIDB() {
   } catch (e) { console.warn(e); }
 }
 
-/* ---------- AUDIUS API ---------- */
-const AUDIUS_HOST = 'https://discoveryprovider.audius.co';
+/* ============ МУЗЫКАЛЬНЫЕ ИСТОЧНИКИ ============ */
+
+/**
+ * Единая точка поиска — переключается между Audius и своим API.
+ */
+async function searchTracks(query) {
+  const customApi = (state.settings.customApi || CONFIG.CUSTOM_API_FALLBACK || '').trim();
+  if (customApi) {
+    try {
+      return await searchCustomApi(customApi, query);
+    } catch (e) {
+      console.warn('Custom API failed, falling back to Audius', e);
+      toast('Свой API не ответил, ищу в Audius');
+    }
+  }
+  return await audiusSearch(query);
+}
+
 async function audiusSearch(query) {
-  const url = `${AUDIUS_HOST}/v1/tracks/search?query=${encodeURIComponent(query)}&app_name=LimeMusic`;
-  const r = await fetch(url);
-  if (!r.ok) throw new Error('Audius API error');
+  const base = CONFIG.AUDIUS_HOST;
+  const url = `${base}/v1/tracks/search?query=${encodeURIComponent(query)}&app_name=${CONFIG.APP_NAME}`;
+  const fetchUrl = maybeProxy(url);
+  const r = await fetch(fetchUrl);
+  if (!r.ok) throw new Error('Audius API error ' + r.status);
   const data = await r.json();
   return (data.data || []).map(t => ({
     id: 'audius_' + t.id,
     audiusId: t.id,
     title: t.title,
     artist: (t.user && t.user.name) || 'Unknown',
-    url: `${AUDIUS_HOST}/v1/tracks/${t.id}/stream?app_name=LimeMusic`,
-    cover: t.artwork ? t.artwork['480x480'] || t.artwork['150x150'] : null,
+    url: maybeProxy(`${base}/v1/tracks/${t.id}/stream?app_name=${CONFIG.APP_NAME}`),
+    cover: t.artwork ? (t.artwork['480x480'] || t.artwork['150x150']) : null,
     duration: t.duration || 0,
     source: 'audius',
   }));
 }
 
-/* ---------- UI: RENDER ---------- */
+async function searchCustomApi(apiBase, query) {
+  const url = `${apiBase.replace(/\/$/, '')}/search?q=${encodeURIComponent(query)}`;
+  const r = await fetch(url);
+  if (!r.ok) throw new Error('Custom API error ' + r.status);
+  const data = await r.json();
+  const arr = Array.isArray(data) ? data : (data.data || []);
+  return arr.map(t => ({
+    id: 'custom_' + (t.id || Math.random().toString(36).slice(2)),
+    title: t.title,
+    artist: t.artist || 'Unknown',
+    url: t.url && t.url.startsWith('http') ? t.url : `${apiBase.replace(/\/$/, '')}/stream/${t.id}`,
+    cover: t.cover || null,
+    duration: t.duration || 0,
+    source: 'custom',
+  }));
+}
+
+/**
+ * Если поднят server.py с /api/proxy — прогоняем запросы через него.
+ * Это скрывает от посетителя, куда именно идут запросы.
+ */
+function maybeProxy(url) {
+  if (!state.settings.useProxy) return url;
+  if (!/^https?:\/\//.test(url)) return url;
+  // Прокси работает только если сайт открыт с http(s) (не file://)
+  if (location.protocol !== 'http:' && location.protocol !== 'https:') return url;
+  return `${CONFIG.PROXY_PATH}?url=${encodeURIComponent(url)}`;
+}
+
+/* ============ UI: RENDER ============ */
 function render() {
   const c = $('#viewContent');
   const t = $('#pageTitle');
   if (state.view === 'search') { t.textContent = 'Поиск'; renderSearch(c); }
   else if (state.view === 'library') { t.textContent = 'Библиотека'; renderLibrary(c); }
   else if (state.view === 'liked') { t.textContent = 'Любимые'; renderLiked(c); }
+  else if (state.view === 'settings') { t.textContent = 'Настройки'; renderSettings(c); }
   else if (state.view.startsWith('pl_')) {
     const pl = state.playlists.find(p => p.id === state.view.slice(3));
     t.textContent = pl ? pl.name : 'Плейлист';
@@ -616,7 +781,7 @@ function welcomeBlock() {
     <div class="empty">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
       <h3>Начните искать музыку</h3>
-      <p>Введите название трека или исполнителя</p>
+      <p>Попробуйте: lofi, electronic, chill</p>
     </div>
   `;
 }
@@ -626,7 +791,7 @@ async function doSearch(q) {
   if (!box) return;
   box.innerHTML = '<div class="spinner"></div>';
   try {
-    const tracks = await audiusSearch(q);
+    const tracks = await searchTracks(q);
     if (!tracks.length) {
       box.innerHTML = `<div class="empty"><h3>Ничего не найдено</h3><p>Попробуйте другой запрос</p></div>`;
       return;
@@ -650,7 +815,6 @@ function renderLibrary(c) {
   const fileInput = $('#fileInput');
   $('#uploadBar').onclick = () => fileInput.click();
   fileInput.onchange = (e) => handleFiles(e.target.files);
-  // drag&drop
   c.ondragover = (e) => { e.preventDefault(); c.style.background = 'var(--surface-2)'; };
   c.ondragleave = () => { c.style.background = ''; };
   c.ondrop = (e) => {
@@ -711,8 +875,8 @@ function trackHtml(t) {
   const isLiked = state.liked.some(x => x.id === t.id);
   const isPlaying = state.queue[state.qIndex] && state.queue[state.qIndex].id === t.id && state.playing;
   const cover = t.cover
-    ? `<img class="t-cover" src="${escapeAttr(t.cover)}" alt="" onerror="this.outerHTML='<div class=\\'t-cover\\'>🎵</div>'">`
-    : `<div class="t-cover">🎵</div>`;
+    ? `<img class="t-cover" src="${escapeAttr(t.cover)}" alt="" loading="lazy" onerror="this.outerHTML='<div class=\\'t-cover\\'>🍋</div>'">`
+    : `<div class="t-cover">🍋</div>`;
   return `
     <div class="track ${isPlaying ? 'playing' : ''}" data-id="${escapeAttr(t.id)}">
       ${cover}
@@ -763,20 +927,18 @@ function bindTrackList(tracks) {
 }
 
 function collectVisibleTracks() {
-  // Собираем треки из текущего вида (для клика)
   if (state.view === 'library') return state.localTracks;
   if (state.view === 'liked') return state.liked;
   if (state.view.startsWith('pl_')) {
     const pl = state.playlists.find(p => p.id === state.view.slice(3));
     return pl ? pl.tracks : [];
   }
-  // search — соберём по data-id из DOM, ища во всех известных источниках
   const ids = Array.from($$('.track')).map(el => el.dataset.id);
   const pool = [...state.localTracks, ...state.liked, ...state.playlists.flatMap(p => p.tracks)];
   return ids.map(id => pool.find(t => t.id === id)).filter(Boolean);
 }
 
-/* ---------- ДЕЙСТВИЯ ---------- */
+/* ============ ДЕЙСТВИЯ ============ */
 function toggleLike(t) {
   const i = state.liked.findIndex(x => x.id === t.id);
   if (i >= 0) { state.liked.splice(i, 1); toast('Убрано из любимых'); }
@@ -824,9 +986,10 @@ async function handleFiles(files) {
   saveState(); toast(`Добавлено: ${arr.length}`); render();
 }
 
-/* ---------- ПЛЕЕР ---------- */
+/* ============ ПЛЕЕР ============ */
 const audio = new Audio();
 audio.preload = 'metadata';
+audio.crossOrigin = 'anonymous';
 
 function playFrom(list, index) {
   state.queue = list.slice();
@@ -836,13 +999,14 @@ function playFrom(list, index) {
 function loadTrack(t, autoplay) {
   if (!t) return;
   audio.src = t.url;
+  audio.playbackRate = state.settings.speed || 1;
   $('#pTitle').textContent = t.title;
   $('#pArtist').textContent = t.artist;
   const cover = $('#pCover');
   if (t.cover) {
-    cover.outerHTML = `<img class="p-cover" id="pCover" src="${escapeAttr(t.cover)}" onerror="this.outerHTML='<div class=\\'p-cover\\' id=\\'pCover\\'>🎵</div>'">`;
+    cover.outerHTML = `<img class="p-cover" id="pCover" src="${escapeAttr(t.cover)}" onerror="this.outerHTML='<div class=\\'p-cover\\' id=\\'pCover\\'>🍋</div>'">`;
   } else {
-    cover.outerHTML = `<div class="p-cover" id="pCover">🎵</div>`;
+    cover.outerHTML = `<div class="p-cover" id="pCover">🍋</div>`;
   }
   if (autoplay) audio.play().catch(e => console.warn(e));
   updateMediaSession(t);
@@ -894,7 +1058,7 @@ function updateMediaSession(t) {
   } catch (e) {}
 }
 
-/* ---------- СОБЫТИЯ ПЛЕЕРА ---------- */
+/* ============ СОБЫТИЯ ПЛЕЕРА ============ */
 audio.addEventListener('play', () => {
   state.playing = true;
   $('#playIcon').innerHTML = '<path d="M6 5h4v14H6zM14 5h4v14h-4z"/>';
@@ -917,7 +1081,7 @@ audio.addEventListener('error', () => {
   toast('Не удалось воспроизвести трек');
 });
 
-/* ---------- КНОПКИ ПЛЕЕРА ---------- */
+/* ============ КНОПКИ ПЛЕЕРА ============ */
 $('#playBtn').onclick = togglePlay;
 $('#nextBtn').onclick = nextTrack;
 $('#prevBtn').onclick = prevTrack;
@@ -933,13 +1097,11 @@ $('#repeatBtn').onclick = () => {
   toast({ off: 'Повтор выкл', all: 'Повтор всех', one: 'Повтор одного' }[state.repeat]);
 };
 
-// прогресс
 $('#progressBar').onclick = (e) => {
   const r = e.currentTarget.getBoundingClientRect();
   const p = (e.clientX - r.left) / r.width;
   if (audio.duration) audio.currentTime = p * audio.duration;
 };
-// громкость
 $('#volumeBar').onclick = (e) => {
   const r = e.currentTarget.getBoundingClientRect();
   const p = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
@@ -949,7 +1111,7 @@ $('#volumeBar').onclick = (e) => {
   saveState();
 };
 
-/* ---------- НАВИГАЦИЯ ---------- */
+/* ============ НАВИГАЦИЯ ============ */
 $$('.nav-item').forEach(b => {
   b.onclick = () => {
     state.view = b.dataset.view;
@@ -958,7 +1120,7 @@ $$('.nav-item').forEach(b => {
   };
 });
 
-/* ---------- ТЕМА ---------- */
+/* ============ ТЕМА ============ */
 function applyTheme() {
   document.documentElement.dataset.theme = state.settings.theme;
   document.querySelector('meta[name=theme-color]').setAttribute(
@@ -970,7 +1132,7 @@ $('#themeBtn').onclick = () => {
   applyTheme(); saveState();
 };
 
-/* ---------- МОДАЛКА ---------- */
+/* ============ МОДАЛКА ============ */
 let modalCb = null;
 function openModal(title, value, cb) {
   $('#modalTitle').textContent = title;
@@ -998,7 +1160,254 @@ $('#newPlaylistBtn').onclick = () => {
   });
 };
 
-/* ---------- TOAST ---------- */
+/* ============ НАСТРОЙКИ ============ */
+function renderSettings(c) {
+  const eq = state.settings.eq;
+  c.innerHTML = `
+    <div class="settings-section">
+      <h3>🎨 Внешний вид</h3>
+      <div class="desc">Светлая или тёмная тема</div>
+      <div class="setting-row">
+        <div><div class="setting-label">Тёмная тема</div></div>
+        <div class="switch ${state.settings.theme === 'dark' ? 'on' : ''}" id="swTheme"></div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h3>🎚️ Эквалайзер</h3>
+      <div class="desc">Настройка звучания по частотам (Web Audio API)</div>
+      <div class="setting-row" style="border:none;padding-bottom:4px;">
+        <div class="setting-label">Включить эквалайзер</div>
+        <div class="switch ${eq.enabled ? 'on' : ''}" id="swEq"></div>
+      </div>
+      <div class="${eq.enabled ? '' : 'hidden'}" id="eqControls">
+        <div class="eq-presets" id="eqPresets">
+          ${Object.keys(EQ_PRESETS).map(k => `
+            <button class="eq-preset ${eq.preset === k ? 'active' : ''}" data-preset="${k}">${k}</button>
+          `).join('')}
+        </div>
+        <div class="eq-bands">
+          ${EQ_FREQS.map((f, i) => `
+            <div class="eq-band">
+              <input type="range" min="-12" max="12" step="1"
+                     value="${eq.bands[i]}" data-band="${i}">
+              <div class="val" id="eqVal${i}">${eq.bands[i] > 0 ? '+' : ''}${eq.bands[i]}</div>
+              <div class="lbl">${f}</div>
+            </div>
+          `).join('')}
+        </div>
+        <button class="btn btn-ghost" id="eqReset" style="width:100%;margin-top:8px;">Сбросить</button>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h3>⏩ Скорость воспроизведения</h3>
+      <div class="desc">Изменение темпа без изменения тона</div>
+      <div class="speed-chips">
+        ${[0.5, 0.75, 1, 1.25, 1.5, 1.75, 2].map(s => `
+          <button class="speed-chip ${Math.abs(state.settings.speed - s) < 0.01 ? 'active' : ''}"
+                  data-speed="${s}">${s}×</button>
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h3>🌐 Свой источник (вариант D)</h3>
+      <div class="desc">
+        Укажи URL своего API. Ожидаемые эндпоинты:<br>
+        <code>GET /search?q=...</code> → JSON-массив треков<br>
+        <code>GET /stream/{id}</code> → аудиопоток<br>
+        Оставь пустым, чтобы искать в Audius.
+      </div>
+      <input type="text" class="text-input" id="customApiInput"
+             placeholder="https://api.example.com"
+             value="${escapeAttr(state.settings.customApi || '')}">
+      <div style="display:flex;gap:8px;margin-top:10px;">
+        <button class="btn btn-primary" id="saveApi" style="flex:1;">Сохранить</button>
+        <button class="btn btn-ghost" id="testApi">Проверить</button>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h3>🕵️ Анонимность</h3>
+      <div class="desc">Маршрутизация запросов через server.py (прокси)</div>
+      <div class="setting-row" style="border:none;">
+        <div>
+          <div class="setting-label">Использовать прокси</div>
+          <div class="setting-hint">Скрывает от посетителя, куда уходят запросы</div>
+        </div>
+        <div class="switch ${state.settings.useProxy ? 'on' : ''}" id="swProxy"></div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h3>💾 Плейлисты и данные</h3>
+      <div class="desc">Резервная копия и восстановление</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn-primary" id="exportBtn">⬇ Экспорт JSON</button>
+        <button class="btn btn-ghost" id="importBtn">⬆ Импорт JSON</button>
+        <input type="file" id="importFile" accept=".json" class="hidden">
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h3>ℹ️ О приложении</h3>
+      <div class="desc">
+        <strong>LimonMusic v2.0</strong><br>
+        Бесплатная музыка без рекламы и трекинга.<br>
+        Источники: Audius (открытая музыка) + твои файлы.<br>
+        Домен: <code>limonmusic.jo3.org</code>
+      </div>
+    </div>
+  `;
+
+  $('#swTheme').onclick = () => {
+    state.settings.theme = state.settings.theme === 'dark' ? 'light' : 'dark';
+    applyTheme(); saveState(); renderSettings(c);
+  };
+  $('#swEq').onclick = () => {
+    state.settings.eq.enabled = !state.settings.eq.enabled;
+    applyEQ(); saveState(); renderSettings(c);
+  };
+  $('#swProxy').onclick = () => {
+    state.settings.useProxy = !state.settings.useProxy;
+    saveState(); renderSettings(c);
+    toast(state.settings.useProxy ? 'Прокси включён' : 'Прокси выключен');
+  };
+
+  $$('#eqPresets [data-preset]').forEach(b => {
+    b.onclick = () => {
+      const name = b.dataset.preset;
+      state.settings.eq.preset = name;
+      state.settings.eq.bands = [...EQ_PRESETS[name]];
+      applyEQ(); saveState(); renderSettings(c);
+    };
+  });
+
+  $$('[data-band]').forEach(inp => {
+    inp.oninput = () => {
+      const i = +inp.dataset.band;
+      state.settings.eq.bands[i] = +inp.value;
+      $('#eqVal' + i).textContent = (inp.value > 0 ? '+' : '') + inp.value;
+      state.settings.eq.preset = 'custom';
+      applyEQ(); saveState();
+    };
+  });
+
+  $('#eqReset').onclick = () => {
+    state.settings.eq.bands = [...EQ_PRESETS.flat];
+    state.settings.eq.preset = 'flat';
+    applyEQ(); saveState(); renderSettings(c);
+  };
+
+  $$('[data-speed]').forEach(b => {
+    b.onclick = () => {
+      state.settings.speed = +b.dataset.speed;
+      audio.playbackRate = state.settings.speed;
+      saveState(); renderSettings(c);
+      toast(`Скорость: ${state.settings.speed}×`);
+    };
+  });
+
+  $('#saveApi').onclick = () => {
+    state.settings.customApi = $('#customApiInput').value.trim();
+    saveState(); toast('API сохранён');
+  };
+  $('#testApi').onclick = async () => {
+    const url = $('#customApiInput').value.trim();
+    if (!url) return toast('Введите URL');
+    try {
+      const r = await fetch(`${url.replace(/\/$/, '')}/search?q=test`);
+      toast(r.ok ? `✅ API отвечает (${r.status})` : `⚠️ Ответ ${r.status}`);
+    } catch (e) { toast('❌ Не удалось подключиться'); }
+  };
+
+  $('#exportBtn').onclick = exportData;
+  $('#importBtn').onclick = () => $('#importFile').click();
+  $('#importFile').onchange = (e) => {
+    const f = e.target.files[0];
+    if (!f) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const data = JSON.parse(reader.result);
+        if (data.playlists) state.playlists = data.playlists;
+        if (data.liked) state.liked = data.liked;
+        saveState(); render(); toast('Данные загружены');
+      } catch (err) { toast('Ошибка файла'); }
+    };
+    reader.readAsText(f);
+  };
+}
+
+function exportData() {
+  const data = {
+    version: 2,
+    exportedAt: new Date().toISOString(),
+    playlists: state.playlists,
+    liked: state.liked,
+    settings: state.settings,
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `limonmusic-backup-${Date.now()}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('Файл сохранён');
+}
+
+/* ============ ЭКВАЛАЙЗЕР (Web Audio API) ============ */
+const EQ_FREQS = ['60Hz', '230Hz', '910Hz', '3.6kHz', '14kHz'];
+const EQ_FREQ_HZ = [60, 230, 910, 3600, 14000];
+const EQ_PRESETS = {
+  flat:      [0, 0, 0, 0, 0],
+  bass:      [8, 5, 0, 0, 0],
+  vocal:     [-2, 0, 4, 4, 1],
+  rock:      [5, 2, -1, 3, 5],
+  pop:       [-1, 2, 4, 2, -1],
+  jazz:      [3, 1, -1, 1, 3],
+  electronic:[6, 3, 0, 2, 5],
+  custom:    [0, 0, 0, 0, 0],
+};
+
+let audioCtx = null;
+let eqNodes = [];
+let sourceNode = null;
+
+function ensureAudioGraph() {
+  if (audioCtx) return;
+  try {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    sourceNode = audioCtx.createMediaElementSource(audio);
+    eqNodes = EQ_FREQ_HZ.map((freq) => {
+      const n = audioCtx.createBiquadFilter();
+      n.type = 'peaking';
+      n.frequency.value = freq;
+      n.Q.value = 1;
+      n.gain.value = 0;
+      return n;
+    });
+    let prev = sourceNode;
+    eqNodes.forEach(n => { prev.connect(n); prev = n; });
+    prev.connect(audioCtx.destination);
+  } catch (e) {
+    console.warn('Audio graph error', e);
+  }
+}
+
+function applyEQ() {
+  ensureAudioGraph();
+  if (!audioCtx) return;
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  const eq = state.settings.eq;
+  eqNodes.forEach((n, i) => {
+    n.gain.value = eq.enabled ? eq.bands[i] : 0;
+  });
+}
+
+/* ============ TOAST ============ */
 let toastTimer;
 function toast(msg) {
   const el = $('#toast');
@@ -1008,31 +1417,40 @@ function toast(msg) {
   toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
 }
 
-/* ---------- УТИЛИТЫ ---------- */
+/* ============ УТИЛИТЫ ============ */
 function escapeHtml(s) {
   return String(s || '').replace(/[&<>"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
 }
 function escapeAttr(s) { return escapeHtml(s); }
 
-/* ---------- MEDIA SESSION: ГЛОБАЛЬНЫЕ ОБРАБОТЧИКИ ---------- */
+/* ============ MEDIA SESSION ============ */
 if ('mediaSession' in navigator) {
-  navigator.mediaSession.setActionHandler('play', () => audio.play());
-  navigator.mediaSession.setActionHandler('pause', () => audio.pause());
+  try {
+    navigator.mediaSession.setActionHandler('play', () => audio.play());
+    navigator.mediaSession.setActionHandler('pause', () => audio.pause());
+  } catch (e) {}
 }
 
-/* ---------- INIT ---------- */
+/* ============ INIT ============ */
 loadState();
 applyTheme();
 audio.volume = state.settings.volume ?? 1;
+audio.playbackRate = state.settings.speed || 1;
 $('#volumeFill').style.width = (audio.volume * 100) + '%';
 render();
 
-/* ---------- SERVICE WORKER (PWA офлайн-оболочка) ---------- */
+/* ============ SERVICE WORKER ============ */
 if ('serviceWorker' in navigator && location.protocol !== 'file:') {
   navigator.serviceWorker.register('sw.js').catch(() => {});
 }
 
-/* ---------- ГОРЯЧИЕ КЛАВИШИ (ПК) ---------- */
+/* ============ РАЗБЛОКИРОВКА AUDIO CONTEXT ============ */
+document.addEventListener('click', () => {
+  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+  ensureAudioGraph();
+}, { once: true });
+
+/* ============ ГОРЯЧИЕ КЛАВИШИ ============ */
 document.addEventListener('keydown', (e) => {
   if (e.target.matches('input')) return;
   if (e.code === 'Space') { e.preventDefault(); togglePlay(); }
