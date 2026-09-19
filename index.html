@@ -2,16 +2,17 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
 <meta name="theme-color" content="#b8e986">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="description" content="LimonMusic — бесплатная музыка без рекламы">
 <meta name="referrer" content="no-referrer">
-<meta name="robots" content="noindex, nofollow">
 <title>LimonMusic</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍋</text></svg>">
 <style>
-/* ============ ТЕМА ============ */
 :root {
   --bg: #f5f7f3;
   --surface: #ffffff;
@@ -29,7 +30,9 @@
   --radius-sm: 10px;
   --radius-md: 16px;
   --radius-lg: 24px;
-  --player-h: 88px;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-top: env(safe-area-inset-top, 0px);
+  --player-h: calc(88px + var(--safe-bottom));
 }
 [data-theme="dark"] {
   --bg: #0f1210;
@@ -44,7 +47,15 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; overflow: hidden; }
+html, body {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+}
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
   background: var(--bg);
@@ -58,7 +69,6 @@ input { font-family: inherit; }
 ::-webkit-scrollbar-thumb { background: var(--surface-3); border-radius: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 
-/* ============ LAYOUT ============ */
 .app {
   display: grid;
   grid-template-columns: 240px 1fr;
@@ -67,7 +77,6 @@ input { font-family: inherit; }
   height: 100dvh;
 }
 
-/* ============ SIDEBAR ============ */
 .sidebar {
   grid-row: 1 / 3;
   background: var(--surface);
@@ -117,11 +126,15 @@ input { font-family: inherit; }
 .pl-item:hover { background: var(--surface-2); color: var(--text); }
 .pl-item.active { background: var(--surface-2); color: var(--text); font-weight: 600; }
 
-/* ============ MAIN ============ */
 .main {
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  transform: translateZ(0);
   padding: 24px 32px calc(var(--player-h) + 24px);
   position: relative;
+  height: 100%;
 }
 .main-header {
   display: flex; justify-content: space-between; align-items: center;
@@ -138,7 +151,6 @@ input { font-family: inherit; }
 .icon-btn:hover { background: var(--surface-2); }
 .icon-btn svg { width: 20px; height: 20px; }
 
-/* ============ SEARCH ============ */
 .search-bar {
   display: flex; align-items: center; gap: 10px;
   background: var(--surface); border: 1px solid var(--border);
@@ -153,18 +165,6 @@ input { font-family: inherit; }
 }
 .search-bar input::placeholder { color: var(--text-dim); }
 
-/* ============ TABS ============ */
-.tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
-.tab {
-  padding: 8px 16px; border-radius: 999px;
-  background: var(--surface); border: 1px solid var(--border);
-  font-size: 14px; font-weight: 500; color: var(--text-dim);
-  transition: all 0.15s;
-}
-.tab:hover { color: var(--text); }
-.tab.active { background: var(--accent); color: var(--text); border-color: var(--accent); font-weight: 600; }
-
-/* ============ TRACK LIST ============ */
 .track-list { display: flex; flex-direction: column; gap: 4px; }
 .track {
   display: grid;
@@ -195,7 +195,6 @@ input { font-family: inherit; }
 .t-btn.liked { color: #e94c4c; }
 .t-btn svg { width: 18px; height: 18px; }
 
-/* ============ EMPTY ============ */
 .empty {
   text-align: center; padding: 60px 20px; color: var(--text-dim);
 }
@@ -203,7 +202,6 @@ input { font-family: inherit; }
 .empty h3 { font-size: 18px; color: var(--text); margin-bottom: 8px; }
 .empty p { font-size: 14px; }
 
-/* ============ PLAYER ============ */
 .player {
   grid-column: 1 / -1;
   background: var(--surface);
@@ -211,7 +209,7 @@ input { font-family: inherit; }
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   gap: 16px; align-items: center;
-  padding: 12px 20px;
+  padding: 12px 20px calc(12px + var(--safe-bottom));
   z-index: 100;
 }
 .p-left { display: flex; align-items: center; gap: 12px; min-width: 0; }
@@ -260,7 +258,6 @@ input { font-family: inherit; }
 .volume { display: flex; align-items: center; gap: 8px; }
 .volume .bar { width: 100px; flex: none; }
 
-/* ============ MODAL ============ */
 .modal-bg {
   position: fixed; inset: 0; background: rgba(0,0,0,0.5);
   display: none; align-items: center; justify-content: center;
@@ -289,7 +286,6 @@ input { font-family: inherit; }
 .btn-ghost { color: var(--text-dim); }
 .btn-ghost:hover { background: var(--surface-2); color: var(--text); }
 
-/* ============ TOAST ============ */
 .toast {
   position: fixed; bottom: calc(var(--player-h) + 20px); left: 50%;
   transform: translateX(-50%) translateY(20px);
@@ -302,7 +298,6 @@ input { font-family: inherit; }
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-/* ============ SETTINGS ============ */
 .settings-section {
   background: var(--surface); border: 1px solid var(--border);
   border-radius: var(--radius-md); padding: 20px;
@@ -396,7 +391,6 @@ input[type="range"]::-moz-range-thumb {
 }
 .text-input:focus { border-color: var(--accent-deep); }
 
-/* ============ MISC ============ */
 .spinner {
   width: 32px; height: 32px; border: 3px solid var(--surface-3);
   border-top-color: var(--accent-deep); border-radius: 50%;
@@ -406,12 +400,12 @@ input[type="range"]::-moz-range-thumb {
 
 .hidden { display: none !important; }
 
-/* ============ MOBILE ============ */
 @media (max-width: 860px) {
   .app { grid-template-columns: 1fr; grid-template-rows: 1fr auto var(--player-h); }
   .sidebar {
     grid-row: 2; grid-column: 1;
     flex-direction: row; padding: 8px;
+    padding-bottom: calc(8px + var(--safe-bottom));
     border-right: none; border-top: 1px solid var(--border);
     overflow: visible; justify-content: space-around;
   }
@@ -422,11 +416,11 @@ input[type="range"]::-moz-range-thumb {
     justify-content: center; text-align: center;
   }
   .nav-item .ico { width: 22px; height: 22px; }
-  .main { grid-row: 1; padding: 16px 16px 24px; }
+  .main { grid-row: 1; padding: 16px 16px calc(var(--player-h) + 16px); }
   .main-header h1 { font-size: 22px; }
   .player {
     grid-template-columns: 1fr auto;
-    padding: 8px 12px;
+    padding: 8px 12px calc(8px + var(--safe-bottom));
     gap: 8px;
   }
   .p-center { grid-column: 1 / -1; order: -1; min-width: 0; width: 100%; }
@@ -438,7 +432,6 @@ input[type="range"]::-moz-range-thumb {
 </head>
 <body>
 <div class="app">
-  <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="logo">
       <div class="logo-icon">🍋</div>
@@ -471,7 +464,6 @@ input[type="range"]::-moz-range-thumb {
     </div>
   </aside>
 
-  <!-- MAIN -->
   <main class="main" id="main">
     <div class="main-header">
       <h1 id="pageTitle">Поиск</h1>
@@ -481,11 +473,9 @@ input[type="range"]::-moz-range-thumb {
         </button>
       </div>
     </div>
-
     <div id="viewContent"></div>
   </main>
 
-  <!-- PLAYER -->
   <div class="player">
     <div class="p-left">
       <div class="p-cover" id="pCover">🍋</div>
@@ -527,7 +517,6 @@ input[type="range"]::-moz-range-thumb {
   </div>
 </div>
 
-<!-- MODAL -->
 <div class="modal-bg" id="modalBg">
   <div class="modal">
     <h3 id="modalTitle">Новый плейлист</h3>
@@ -543,29 +532,20 @@ input[type="range"]::-moz-range-thumb {
 
 <script>
 /* ============================================================
-   LIMONMUSIC v2.0
-   Домен: https://limonmusic.jo3.org
+   LIMONMUSIC v3.0 — с Internet Archive
    ============================================================ */
 
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => document.querySelectorAll(s);
 
-/* ============ КОНФИГ ============ */
 const CONFIG = {
-  // Источник по умолчанию (Audius — открытая музыка)
   AUDIUS_HOST: 'https://discoveryprovider.audius.co',
   APP_NAME: 'LimonMusic',
-  // Свой API (вариант D). Если пользователь ввёл — используется вместо Audius.
-  // Формат ожидаемых эндпоинтов:
-  //   GET  {customApi}/search?q=...   → [{id,title,artist,url,cover,duration}]
-  //   GET  {customApi}/stream/{id}    → аудиопоток
   CUSTOM_API_FALLBACK: '',
-  // Прокси (если поднят свой server.py с /api/proxy)
   USE_PROXY: true,
   PROXY_PATH: '/api/proxy',
 };
 
-/* ============ СОСТОЯНИЕ ============ */
 const state = {
   view: 'search',
   currentPlaylist: null,
@@ -584,11 +564,11 @@ const state = {
     eq: { enabled: false, preset: 'flat', bands: [0,0,0,0,0] },
     customApi: '',
     useProxy: true,
+    source: 'audius', // 'audius' | 'archive'
   },
 };
 
-/* ============ STORAGE ============ */
-const LS_KEY = 'limon_music_v2';
+const LS_KEY = 'limon_music_v3';
 function saveState() {
   try {
     const data = {
@@ -617,7 +597,6 @@ function loadState() {
   } catch (e) { console.warn('load error', e); }
 }
 
-/* ============ INDEXEDDB ============ */
 let idb = null;
 function openIDB() {
   return new Promise((res, rej) => {
@@ -660,20 +639,14 @@ async function restoreLocalFromIDB() {
   } catch (e) { console.warn(e); }
 }
 
-/* ============ МУЗЫКАЛЬНЫЕ ИСТОЧНИКИ ============ */
-
-/**
- * Единая точка поиска — переключается между Audius и своим API.
- */
 async function searchTracks(query) {
+  if (state.settings.source === 'archive') {
+    return await archiveSearch(query);
+  }
   const customApi = (state.settings.customApi || CONFIG.CUSTOM_API_FALLBACK || '').trim();
   if (customApi) {
-    try {
-      return await searchCustomApi(customApi, query);
-    } catch (e) {
-      console.warn('Custom API failed, falling back to Audius', e);
-      toast('Свой API не ответил, ищу в Audius');
-    }
+    try { return await searchCustomApi(customApi, query); }
+    catch (e) { console.warn('Custom API failed', e); toast('Свой API не ответил, ищу в Audius'); }
   }
   return await audiusSearch(query);
 }
@@ -697,6 +670,34 @@ async function audiusSearch(query) {
   }));
 }
 
+async function archiveSearch(query) {
+  const url = `https://archive.org/advancedsearch.php?q=${encodeURIComponent(query + ' AND mediatype:audio')}&fl[]=identifier&fl[]=title&fl[]=creator&fl[]=year&rows=30&output=json`;
+  const r = await fetch(url);
+  if (!r.ok) throw new Error('Archive.org error ' + r.status);
+  const data = await r.json();
+  const docs = (data.response && data.response.docs) || [];
+  const tracks = [];
+  for (const d of docs.slice(0, 20)) {
+    try {
+      const metaUrl = `https://archive.org/metadata/${d.identifier}`;
+      const mr = await fetch(metaUrl);
+      const meta = await mr.json();
+      const mp3 = (meta.files || []).find(f => /\.mp3$/i.test(f.name));
+      if (!mp3) continue;
+      tracks.push({
+        id: 'archive_' + d.identifier,
+        title: d.title || mp3.name.replace(/\.mp3$/i, ''),
+        artist: d.creator || 'Internet Archive',
+        url: `https://archive.org/download/${d.identifier}/${encodeURIComponent(mp3.name)}`,
+        cover: null,
+        duration: parseFloat(mp3.length) || 0,
+        source: 'archive',
+      });
+    } catch (e) { /* skip */ }
+  }
+  return tracks;
+}
+
 async function searchCustomApi(apiBase, query) {
   const url = `${apiBase.replace(/\/$/, '')}/search?q=${encodeURIComponent(query)}`;
   const r = await fetch(url);
@@ -714,19 +715,13 @@ async function searchCustomApi(apiBase, query) {
   }));
 }
 
-/**
- * Если поднят server.py с /api/proxy — прогоняем запросы через него.
- * Это скрывает от посетителя, куда именно идут запросы.
- */
 function maybeProxy(url) {
   if (!state.settings.useProxy) return url;
   if (!/^https?:\/\//.test(url)) return url;
-  // Прокси работает только если сайт открыт с http(s) (не file://)
   if (location.protocol !== 'http:' && location.protocol !== 'https:') return url;
   return `${CONFIG.PROXY_PATH}?url=${encodeURIComponent(url)}`;
 }
 
-/* ============ UI: RENDER ============ */
 function render() {
   const c = $('#viewContent');
   const t = $('#pageTitle');
@@ -938,7 +933,6 @@ function collectVisibleTracks() {
   return ids.map(id => pool.find(t => t.id === id)).filter(Boolean);
 }
 
-/* ============ ДЕЙСТВИЯ ============ */
 function toggleLike(t) {
   const i = state.liked.findIndex(x => x.id === t.id);
   if (i >= 0) { state.liked.splice(i, 1); toast('Убрано из любимых'); }
@@ -986,10 +980,8 @@ async function handleFiles(files) {
   saveState(); toast(`Добавлено: ${arr.length}`); render();
 }
 
-/* ============ ПЛЕЕР ============ */
 const audio = new Audio();
 audio.preload = 'metadata';
-audio.crossOrigin = 'anonymous';
 
 function playFrom(list, index) {
   state.queue = list.slice();
@@ -1055,18 +1047,20 @@ function updateMediaSession(t) {
     navigator.mediaSession.setActionHandler('pause', () => audio.pause());
     navigator.mediaSession.setActionHandler('previoustrack', prevTrack);
     navigator.mediaSession.setActionHandler('nexttrack', nextTrack);
+    navigator.mediaSession.playbackState = audio.paused ? 'paused' : 'playing';
   } catch (e) {}
 }
 
-/* ============ СОБЫТИЯ ПЛЕЕРА ============ */
 audio.addEventListener('play', () => {
   state.playing = true;
   $('#playIcon').innerHTML = '<path d="M6 5h4v14H6zM14 5h4v14h-4z"/>';
+  if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
   render();
 });
 audio.addEventListener('pause', () => {
   state.playing = false;
   $('#playIcon').innerHTML = '<path d="M8 5v14l11-7z"/>';
+  if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused';
   render();
 });
 audio.addEventListener('timeupdate', () => {
@@ -1081,7 +1075,6 @@ audio.addEventListener('error', () => {
   toast('Не удалось воспроизвести трек');
 });
 
-/* ============ КНОПКИ ПЛЕЕРА ============ */
 $('#playBtn').onclick = togglePlay;
 $('#nextBtn').onclick = nextTrack;
 $('#prevBtn').onclick = prevTrack;
@@ -1111,7 +1104,6 @@ $('#volumeBar').onclick = (e) => {
   saveState();
 };
 
-/* ============ НАВИГАЦИЯ ============ */
 $$('.nav-item').forEach(b => {
   b.onclick = () => {
     state.view = b.dataset.view;
@@ -1120,7 +1112,6 @@ $$('.nav-item').forEach(b => {
   };
 });
 
-/* ============ ТЕМА ============ */
 function applyTheme() {
   document.documentElement.dataset.theme = state.settings.theme;
   document.querySelector('meta[name=theme-color]').setAttribute(
@@ -1132,7 +1123,6 @@ $('#themeBtn').onclick = () => {
   applyTheme(); saveState();
 };
 
-/* ============ МОДАЛКА ============ */
 let modalCb = null;
 function openModal(title, value, cb) {
   $('#modalTitle').textContent = title;
@@ -1160,7 +1150,6 @@ $('#newPlaylistBtn').onclick = () => {
   });
 };
 
-/* ============ НАСТРОЙКИ ============ */
 function renderSettings(c) {
   const eq = state.settings.eq;
   c.innerHTML = `
@@ -1170,6 +1159,25 @@ function renderSettings(c) {
       <div class="setting-row">
         <div><div class="setting-label">Тёмная тема</div></div>
         <div class="switch ${state.settings.theme === 'dark' ? 'on' : ''}" id="swTheme"></div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h3>🎵 Источник музыки</h3>
+      <div class="desc">Откуда искать треки</div>
+      <div class="setting-row">
+        <div>
+          <div class="setting-label">Audius (открытая музыка)</div>
+          <div class="setting-hint">Современные независимые исполнители</div>
+        </div>
+        <div class="switch ${state.settings.source === 'audius' ? 'on' : ''}" id="swAudius"></div>
+      </div>
+      <div class="setting-row">
+        <div>
+          <div class="setting-label">Internet Archive</div>
+          <div class="setting-hint">Общественное достояние, классика, джаз, винтаж</div>
+        </div>
+        <div class="switch ${state.settings.source === 'archive' ? 'on' : ''}" id="swArchive"></div>
       </div>
     </div>
 
@@ -1217,7 +1225,7 @@ function renderSettings(c) {
         Укажи URL своего API. Ожидаемые эндпоинты:<br>
         <code>GET /search?q=...</code> → JSON-массив треков<br>
         <code>GET /stream/{id}</code> → аудиопоток<br>
-        Оставь пустым, чтобы искать в Audius.
+        Оставь пустым, чтобы использовать выбранный источник выше.
       </div>
       <input type="text" class="text-input" id="customApiInput"
              placeholder="https://api.example.com"
@@ -1253,10 +1261,10 @@ function renderSettings(c) {
     <div class="settings-section">
       <h3>ℹ️ О приложении</h3>
       <div class="desc">
-        <strong>LimonMusic v2.0</strong><br>
+        <strong>LimonMusic v3.0</strong><br>
         Бесплатная музыка без рекламы и трекинга.<br>
-        Источники: Audius (открытая музыка) + твои файлы.<br>
-        Домен: <code>limonmusic.jo3.org</code>
+        Источники: Audius + Internet Archive + твои файлы.<br>
+        Домен: <code>server.limonmusic.jo3.org</code>
       </div>
     </div>
   `;
@@ -1273,6 +1281,16 @@ function renderSettings(c) {
     state.settings.useProxy = !state.settings.useProxy;
     saveState(); renderSettings(c);
     toast(state.settings.useProxy ? 'Прокси включён' : 'Прокси выключен');
+  };
+  $('#swAudius').onclick = () => {
+    state.settings.source = 'audius';
+    saveState(); renderSettings(c);
+    toast('Источник: Audius');
+  };
+  $('#swArchive').onclick = () => {
+    state.settings.source = 'archive';
+    saveState(); renderSettings(c);
+    toast('Источник: Internet Archive');
   };
 
   $$('#eqPresets [data-preset]').forEach(b => {
@@ -1342,7 +1360,7 @@ function renderSettings(c) {
 
 function exportData() {
   const data = {
-    version: 2,
+    version: 3,
     exportedAt: new Date().toISOString(),
     playlists: state.playlists,
     liked: state.liked,
@@ -1358,7 +1376,6 @@ function exportData() {
   toast('Файл сохранён');
 }
 
-/* ============ ЭКВАЛАЙЗЕР (Web Audio API) ============ */
 const EQ_FREQS = ['60Hz', '230Hz', '910Hz', '3.6kHz', '14kHz'];
 const EQ_FREQ_HZ = [60, 230, 910, 3600, 14000];
 const EQ_PRESETS = {
@@ -1407,7 +1424,6 @@ function applyEQ() {
   });
 }
 
-/* ============ TOAST ============ */
 let toastTimer;
 function toast(msg) {
   const el = $('#toast');
@@ -1417,13 +1433,11 @@ function toast(msg) {
   toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
 }
 
-/* ============ УТИЛИТЫ ============ */
 function escapeHtml(s) {
   return String(s || '').replace(/[&<>"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
 }
 function escapeAttr(s) { return escapeHtml(s); }
 
-/* ============ MEDIA SESSION ============ */
 if ('mediaSession' in navigator) {
   try {
     navigator.mediaSession.setActionHandler('play', () => audio.play());
@@ -1431,7 +1445,6 @@ if ('mediaSession' in navigator) {
   } catch (e) {}
 }
 
-/* ============ INIT ============ */
 loadState();
 applyTheme();
 audio.volume = state.settings.volume ?? 1;
@@ -1439,18 +1452,15 @@ audio.playbackRate = state.settings.speed || 1;
 $('#volumeFill').style.width = (audio.volume * 100) + '%';
 render();
 
-/* ============ SERVICE WORKER ============ */
 if ('serviceWorker' in navigator && location.protocol !== 'file:') {
   navigator.serviceWorker.register('sw.js').catch(() => {});
 }
 
-/* ============ РАЗБЛОКИРОВКА AUDIO CONTEXT ============ */
 document.addEventListener('click', () => {
   if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
   ensureAudioGraph();
 }, { once: true });
 
-/* ============ ГОРЯЧИЕ КЛАВИШИ ============ */
 document.addEventListener('keydown', (e) => {
   if (e.target.matches('input')) return;
   if (e.code === 'Space') { e.preventDefault(); togglePlay(); }
