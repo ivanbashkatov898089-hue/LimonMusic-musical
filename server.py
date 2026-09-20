@@ -19,6 +19,14 @@ ALLOWED_HOSTS = [
     'ia601234.us.archive.org',  # узлы archive.org отдают файлы с разных поддоменов
 ]
 
+@app.route('/')
+def index():
+    # Проверяем, пришел ли запрос на старый домен
+    if request.host == 'limonmusic.jo3.org':
+        # Если да — перенаправляем на рабочий поддомен
+        return redirect('https://server.limonmusic.jo3.org', code=301)
+    return send_from_directory('.', 'index.html')
+
 # Публичные IP archive.org (для download-домена)
 def is_allowed_host(host):
     if not host:
