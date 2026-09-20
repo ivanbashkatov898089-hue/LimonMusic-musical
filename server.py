@@ -2,32 +2,39 @@ import os
 import logging
 import urllib.request
 import urllib.parse
-from flask import Flask, send_from_directory, request, Response, jsonify
+from flask import Flask, send_from_directory, request, Response, jsonify, redirect
 
 # Отключаем логи Werkzeug — анонимность
 logging.getLogger('werkzeug').setLevel(logging.ERROR)
 
 app = Flask(__name__, static_folder='.', static_url_path='')
 
-# Белый список разрешённых хостов (безопасность)
-ALLOWED_HOSTS = [
+# === РЕДИРЕКТ С КОРНЕВОГО ДОМЕНА ===
+# Если пользователь зашёл на limonmusic.jo3.org — перенаправляем
+# на рабочий поддомен server.limonmusic.jo3.org
+CANONICAL_HOST = 'server.limonmusic.jo3.org'
+ROOT_HOSTS = {'limonmusic.jo3.org', 'www.limonmusic.jo3.org'}
+
+
+@app.before_request
+def redirect_root_to_server():
+    host = (request.host or '').split(':')[0].lower()
+    if host in ROOT_HOSTS:
+        # Сохраняем путь и query-параметры
+        new_url = f"https://{CANONICAL_HOST}{request.full_path.rstrip('?')}"
+        return redirect(new_url, code=301)
+
+
+# === БЕЛЫЙ СПИСОК ХОСТОВ ДЛЯ ПРОКСИ ===
+ALLOWED_HOSTS = {
     'discoveryprovider.audius.co',
     'audius.co',
     'api.audius.co',
     'archive.org',
     'www.archive.org',
-    'ia601234.us.archive.org',  # узлы archive.org отдают файлы с разных поддоменов
-]
+}
 
-@app.route('/')
-def index():
-    # Проверяем, пришел ли запрос на старый домен
-    if request.host == 'limonmusic.jo3.org':
-        # Если да — перенаправляем на рабочий поддомен
-        return redirect('https://server.limonmusic.jo3.org', code=301)
-    return send_from_directory('.', 'index.html')
 
-# Публичные IP archive.org (для download-домена)
 def is_allowed_host(host):
     if not host:
         return False
@@ -41,13 +48,17 @@ def is_allowed_host(host):
         return True
     return False
 
+
+# === МАРШРУТЫ ===
 @app.route('/')
 def index():
     return send_from_directory('.', 'index.html')
 
+
 @app.route('/healthz')
 def health():
     return jsonify(status='ok')
+
 
 @app.route('/api/proxy')
 def proxy():
@@ -79,7 +90,6 @@ def proxy():
             data = r.read()
             ctype = r.headers.get('Content-Type', 'application/octet-stream')
             resp = Response(data, content_type=ctype)
-            # CORS на всякий случай (фронт всё равно same-origin)
             resp.headers['Access-Control-Allow-Origin'] = '*'
             resp.headers['Cache-Control'] = 'public, max-age=3600'
             return resp
